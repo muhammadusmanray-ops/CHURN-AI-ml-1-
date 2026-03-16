@@ -47,6 +47,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 // --- Advanced Mock Data ---
 const generateData = () => {
   const data = [];
@@ -119,7 +121,7 @@ function MainDashboard({ user, onLogout, token }: { user: any, onLogout: () => v
   const submitFeedback = async (predictionId: number, isCorrect: boolean, reason?: string) => {
     setFeedbackLoading(predictionId);
     try {
-      await fetch('/api/predictions/feedback', {
+      await fetch(`${API_BASE_URL}/api/predictions/feedback`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -200,7 +202,7 @@ function MainDashboard({ user, onLogout, token }: { user: any, onLogout: () => v
 
   const fetchDbLogs = async () => {
     try {
-      const res = await fetch('/api/logs/history', {
+      const res = await fetch(`${API_BASE_URL}/api/logs/history`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.status === 403 || res.status === 401) {
@@ -220,7 +222,7 @@ function MainDashboard({ user, onLogout, token }: { user: any, onLogout: () => v
 
   const fetchPredictions = async () => {
     try {
-      const res = await fetch('/api/predictions', {
+      const res = await fetch(`${API_BASE_URL}/api/predictions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.status === 403 || res.status === 401) {
@@ -285,7 +287,7 @@ function MainDashboard({ user, onLogout, token }: { user: any, onLogout: () => v
   const saveResultAndExport = async () => {
     try {
       const mockScore = Math.floor(Math.random() * 100);
-      await fetch('/api/predictions', {
+      await fetch(`${API_BASE_URL}/api/predictions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ 
@@ -417,7 +419,7 @@ function MainDashboard({ user, onLogout, token }: { user: any, onLogout: () => v
       pdf.text("04 // STRATEGIC INTERVENTION ROADMAP", margin, 25);
       let aiSummary = "Intelligence core offline during capture.";
       try {
-        const res = await fetch('/api/reports/ai-summary', {
+        const res = await fetch(`${API_BASE_URL}/api/reports/ai-summary`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ data: predictions.slice(0, 5) })
@@ -837,7 +839,7 @@ function AuthScreen({ onLogin }: { onLogin: (token: string, user: any) => void }
     setError('');
     
     try {
-      const res = await fetch('/api/auth/google', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: credentialResponse.credential })
@@ -942,7 +944,7 @@ function ChatInterface({ token }: { token: string }) {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ message: userMsg, history: messages }),

@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -140,6 +141,7 @@ async function startServer() {
   const app = express();
   const PORT = process.env.PORT || 5000;
 
+  app.use(cors());
   app.use(express.json());
 
   // --- Auth Routes ---
